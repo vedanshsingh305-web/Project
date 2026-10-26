@@ -1,0 +1,970 @@
+PROJECT NAME: IMovies — Online Movie Ticket Booking System
+
+ROLE:
+Act as a senior full-stack software engineer, system architect, UI/UX designer,
+database engineer, and QA tester.
+
+Your task is to design, develop, test, and document a complete, functional,
+full-stack movie ticket booking web application called IMovies.
+
+Do not create only a static UI or a frontend prototype. Build a working
+application with a connected backend, persistent MongoDB database,
+authentication, booking management, and real-time seat availability updates.
+
+====================================================
+1. PROJECT OVERVIEW
+====================================================
+
+IMovies is an online movie ticket booking platform that allows users to:
+
+- Discover currently running movies and upcoming releases.
+- Browse movie information, genres, languages, and ratings.
+- Select a cinema, date, and showtime.
+- View a visual seating layout.
+- Select available seats.
+- See the total ticket price before confirming a booking.
+- Reserve seats and receive a booking confirmation.
+- View their booking history.
+- Cancel eligible bookings according to the cancellation policy.
+- Manage their account and profile.
+
+The application must provide a seamless, responsive, and secure movie-booking
+experience across desktop computers, tablets, and mobile devices.
+
+The platform must have two main user roles:
+
+1. Customer
+2. Administrator
+
+Customers can browse movies and book tickets.
+
+Administrators can manage movies, theatres, screens, showtimes, pricing,
+bookings, and users through a protected administration dashboard.
+
+====================================================
+2. TECHNOLOGY STACK
+====================================================
+
+Use the following technologies.
+
+FRONTEND:
+- React.js
+- JavaScript
+- HTML5
+- CSS3
+- Bootstrap 5
+- React Router
+- Axios
+- Context API for application-wide state where appropriate
+
+BACKEND:
+- Node.js
+- Express.js
+- REST API architecture
+- JavaScript
+- Asynchronous programming using async/await
+
+DATABASE:
+- MongoDB
+- Mongoose ODM
+
+AUTHENTICATION AND SECURITY:
+- JSON Web Tokens (JWT)
+- bcrypt or bcryptjs for password hashing
+- Express middleware for authentication and authorization
+- Input validation and sanitization
+- Environment variables for secrets and database credentials
+- Helmet and appropriate security middleware
+- Rate limiting for sensitive endpoints
+
+OPTIONAL REAL-TIME FUNCTIONALITY:
+- Socket.IO for live seat availability updates.
+
+DEVELOPMENT TOOLS:
+- Visual Studio Code
+- npm
+- Git
+- Postman
+
+Do not replace this stack with Next.js, Firebase, Supabase, Django,
+FastAPI, PostgreSQL, or another backend technology.
+
+Use React and Express as separate frontend and backend applications.
+
+====================================================
+3. UI/UX DESIGN REQUIREMENTS
+====================================================
+
+Create a modern, premium cinema-booking interface.
+
+DESIGN DIRECTION:
+- Dark cinematic theme.
+- Background colors: near-black, charcoal, and dark gray.
+- Accent colors: red and subtle gold.
+- High-quality movie poster layouts.
+- Clean typography.
+- Consistent spacing and alignment.
+- Rounded cards and subtle shadows.
+- Smooth hover effects and transitions.
+- Clear visual hierarchy.
+- Responsive navigation.
+- Accessible form controls and buttons.
+- Loading indicators, empty states, and error messages.
+
+Avoid excessive animations, unnecessary gradients, and cluttered layouts.
+
+The interface should resemble a professional commercial movie-ticket booking
+platform while maintaining its own identity as IMovies.
+
+Use a reusable component system rather than duplicating UI code.
+
+Create a logo or text-based brand mark reading "IMovies".
+
+Include realistic movie posters only from legitimate image sources or
+locally stored assets. Do not invent image URLs.
+
+If external movie data or image services are unavailable, provide local
+placeholder images and make the application work without them.
+
+====================================================
+4. PUBLIC PAGES
+====================================================
+
+Create the following pages.
+
+A. HOME PAGE
+
+The homepage should contain:
+
+- Responsive navigation bar.
+- IMovies logo.
+- Home link.
+- Movies link.
+- Upcoming Movies link.
+- Search field.
+- Login and Register buttons when logged out.
+- Profile and Logout options when logged in.
+- Featured movie hero section.
+- Currently Showing section.
+- Upcoming Movies section.
+- Popular Movies section.
+- Genre filters.
+- Movie cards containing posters, titles, genres, languages, and ratings.
+- Book Tickets button.
+- Footer containing About, Contact, Privacy Policy, and Terms links.
+
+Movie cards must retrieve their information from the backend API.
+
+B. MOVIES PAGE
+
+Features:
+
+- Display all available movies.
+- Search by movie title.
+- Filter by genre.
+- Filter by language.
+- Filter by release status.
+- Sort by popularity, title, or rating.
+- Pagination or incremental loading.
+- Display an appropriate empty state when no movies match the filters.
+
+C. MOVIE DETAILS PAGE
+
+Display:
+
+- Movie poster and backdrop.
+- Movie title.
+- Description.
+- Genre.
+- Language.
+- Duration.
+- Release date.
+- Age classification where available.
+- Rating when available.
+- Cast and director when available.
+- Trailer link when available.
+- Available theatres.
+- Available dates and showtimes.
+- Book Tickets button.
+
+D. UPCOMING MOVIES PAGE
+
+Display movies that have not yet been released.
+
+Show release dates and disable booking until valid showtimes are available.
+
+E. SEARCH
+
+Implement functional movie search.
+
+Search must work with the backend rather than filtering only the
+currently displayed frontend data.
+
+====================================================
+5. USER AUTHENTICATION
+====================================================
+
+Create registration, login, logout, and account management functionality.
+
+REGISTRATION FIELDS:
+- Full name
+- Email address
+- Password
+- Confirm password
+
+VALIDATION:
+- Required fields.
+- Valid email format.
+- Password length and strength requirements.
+- Matching password confirmation.
+- Duplicate email prevention.
+
+LOGIN:
+- Email
+- Password
+
+AUTHENTICATION REQUIREMENTS:
+- Hash passwords before saving them.
+- Never store plain-text passwords.
+- Issue JWT access tokens after successful authentication.
+- Validate tokens through protected middleware.
+- Implement role-based authorization.
+- Protect user-specific bookings and profile information.
+- Prevent users from accessing another user's bookings.
+- Provide clear authentication error messages.
+
+Use secure, HTTP-only cookies for authentication where practical.
+If using cookies, implement suitable SameSite settings and CSRF protections
+for state-changing requests.
+
+Never hardcode JWT secrets or database passwords.
+
+Implement a logout process that invalidates the client's authenticated session
+and clears the authentication cookie when cookies are used.
+
+====================================================
+6. MOVIE BOOKING WORKFLOW
+====================================================
+
+Implement the following complete booking process.
+
+STEP 1:
+The user opens a movie details page.
+
+STEP 2:
+The user selects a theatre.
+
+STEP 3:
+The user selects a date.
+
+STEP 4:
+The application retrieves available showtimes for that movie and theatre.
+
+STEP 5:
+The user selects a showtime.
+
+STEP 6:
+The application displays the corresponding seating layout.
+
+STEP 7:
+The user selects one or more available seats.
+
+STEP 8:
+The application calculates the ticket price and total amount.
+
+STEP 9:
+The user reviews the booking summary.
+
+STEP 10:
+The user confirms the booking.
+
+STEP 11:
+The backend validates seat availability and reserves the selected seats.
+
+STEP 12:
+The application generates a unique booking reference.
+
+STEP 13:
+The user sees a booking confirmation page.
+
+STEP 14:
+The booking appears in the user's booking history.
+
+The workflow must use actual backend data and database persistence.
+
+Do not simulate successful bookings by displaying a confirmation message
+without saving a booking to MongoDB.
+
+====================================================
+7. SEAT SELECTION AND AVAILABILITY
+====================================================
+
+Create a visual cinema seating layout.
+
+Requirements:
+
+- Display a screen indicator at the top.
+- Organize seats into rows and columns.
+- Assign each seat a unique identifier, such as A1, A2, B1, and B2.
+- Distinguish available seats from selected seats.
+- Distinguish booked seats from temporarily reserved seats.
+- Display a legend explaining seat statuses.
+- Allow users to select multiple seats.
+- Prevent selection of unavailable seats.
+- Show selected seat identifiers.
+- Calculate the total price dynamically.
+- Display the number of selected seats.
+
+Implement server-side protection against double booking.
+
+IMPORTANT CONCURRENCY REQUIREMENT:
+
+Two customers must not be able to successfully book the same seat for
+the same showtime.
+
+Do not rely only on frontend seat availability.
+
+Use MongoDB transactions where supported by the deployment environment,
+with appropriate unique database constraints and atomic reservation logic.
+
+Create a reliable reservation mechanism with expiration for temporarily
+held seats.
+
+If using temporary reservations:
+- Assign a reservation expiration time.
+- Release expired reservations.
+- Recheck seat availability during final booking confirmation.
+- Prevent expired reservations from being confirmed.
+
+If transactions are unavailable, implement an appropriate atomic reservation
+strategy and document the limitations.
+
+Use Socket.IO if practical to notify connected clients when seat availability
+changes. The application must still work correctly without WebSockets.
+
+====================================================
+8. THEATRE AND SHOWTIME MANAGEMENT
+====================================================
+
+Create database models for theatres, screens, and showtimes.
+
+THEATRE INFORMATION:
+- Theatre name
+- Address
+- City
+- Contact details, if provided
+- Active status
+
+SCREEN INFORMATION:
+- Screen name or number
+- Theatre reference
+- Seat layout
+- Total seat count
+- Active status
+
+SHOWTIME INFORMATION:
+- Movie reference
+- Theatre reference
+- Screen reference
+- Start time
+- End time
+- Ticket price or seat-category pricing
+- Booking status
+- Cancellation cutoff, where applicable
+
+Validate showtimes on the server.
+
+Prevent invalid overlapping schedules for the same screen.
+
+Use the selected showtime to determine which seats are available.
+
+A booking for one showtime must not mark seats as booked for another showtime.
+
+====================================================
+9. BOOKING MANAGEMENT
+====================================================
+
+Every booking should contain:
+
+- Unique booking reference
+- Customer reference
+- Movie reference
+- Theatre reference
+- Screen reference
+- Showtime reference
+- Selected seat identifiers
+- Number of tickets
+- Price breakdown
+- Total amount
+- Booking status
+- Payment status, if payment functionality is implemented
+- Booking creation time
+
+Use suitable statuses, such as:
+
+- PENDING
+- CONFIRMED
+- CANCELLED
+- EXPIRED
+
+Implement:
+
+- Booking confirmation.
+- Booking history.
+- Booking details.
+- Booking cancellation when permitted.
+- Automatic release of seats after eligible cancellation.
+- Cancellation policy enforcement.
+- Server-side validation of booking ownership.
+
+A cancellation must not release seats belonging to a different showtime.
+
+Do not claim that a ticket has been paid for unless a payment provider
+has actually confirmed the transaction.
+
+====================================================
+10. PAYMENT HANDLING
+====================================================
+
+Structure the application so that a legitimate payment provider can be
+integrated later.
+
+If implementing a payment gateway, use its official test or sandbox mode.
+
+Requirements:
+
+- Never collect or store raw card details.
+- Never mark an order paid based only on a frontend success message.
+- Verify payment status on the backend.
+- Verify provider webhooks where applicable.
+- Prevent duplicate payment processing.
+- Store payment references and status, not sensitive card information.
+
+If payment integration cannot be completed without credentials, implement
+a clearly labelled development-only mock payment flow.
+
+Clearly distinguish mock payment from real payment.
+
+Do not represent a mock payment as a real financial transaction.
+
+====================================================
+11. CUSTOMER DASHBOARD
+====================================================
+
+Create a protected customer dashboard.
+
+Include:
+
+- Profile information.
+- Edit profile.
+- Change password.
+- Upcoming bookings.
+- Past bookings.
+- Cancel eligible bookings.
+- View booking details.
+- Booking reference.
+- Movie, theatre, date, and showtime.
+- Seat identifiers.
+- Booking status.
+
+A customer must only be able to view and modify their own information
+and bookings.
+
+====================================================
+12. ADMINISTRATOR DASHBOARD
+====================================================
+
+Create a separate protected admin dashboard.
+
+Admin features:
+
+A. Dashboard overview:
+- Total movies.
+- Total users.
+- Total bookings.
+- Upcoming showtimes.
+- Booking statistics.
+
+B. Movie management:
+- Add movies.
+- Edit movies.
+- Delete or archive movies.
+- Set release status.
+- Manage movie metadata and poster references.
+
+C. Theatre management:
+- Add theatres.
+- Edit theatre information.
+- Manage screens and seating layouts.
+
+D. Showtime management:
+- Create showtimes.
+- Edit showtimes.
+- Set ticket prices.
+- Prevent overlapping schedules.
+- Disable booking for unavailable showtimes.
+
+E. Booking management:
+- View bookings.
+- Search by booking reference.
+- Filter by booking status.
+- View booking details.
+
+F. User management:
+- View registered users.
+- Activate or deactivate accounts where appropriate.
+- Never expose password hashes in API responses.
+- Prevent unauthorized users from becoming administrators.
+
+Protect all administrative endpoints on the backend.
+
+Do not rely on hiding admin buttons in the frontend as the only security
+measure.
+
+Do not provide a public administrator registration option.
+
+Provide a safe documented way to create the first administrator account
+during development.
+
+====================================================
+13. MONGODB DATA MODELS
+====================================================
+
+Create suitable Mongoose models for:
+
+1. User
+2. Movie
+3. Theatre
+4. Screen
+5. Showtime
+6. Booking
+7. SeatReservation, if temporary reservations are implemented
+8. Payment, if payment functionality is implemented
+
+Define appropriate relationships, validation rules, timestamps, and indexes.
+
+Use unique indexes where required.
+
+Prevent duplicate booking references.
+
+Implement suitable indexing for:
+- Movie search.
+- Showtime lookups.
+- User booking history.
+- Booking reference lookups.
+- Seat reservation expiration.
+- Seat uniqueness within a showtime.
+
+Avoid storing the same information redundantly unless justified by a clear
+design requirement.
+
+Use consistent error handling and schema validation.
+
+====================================================
+14. BACKEND API
+====================================================
+
+Build a REST API using Express.js.
+
+Create organized routes, controllers, services, middleware, and models.
+
+Suggested endpoints include:
+
+AUTHENTICATION:
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+GET  /api/auth/me
+
+MOVIES:
+GET    /api/movies
+GET    /api/movies/:id
+POST   /api/movies
+PUT    /api/movies/:id
+DELETE /api/movies/:id
+
+THEATRES:
+GET    /api/theatres
+GET    /api/theatres/:id
+POST   /api/theatres
+PUT    /api/theatres/:id
+DELETE /api/theatres/:id
+
+SHOWTIMES:
+GET    /api/showtimes
+GET    /api/showtimes/:id
+POST   /api/showtimes
+PUT    /api/showtimes/:id
+DELETE /api/showtimes/:id
+
+SEATS:
+GET  /api/showtimes/:id/seats
+POST /api/showtimes/:id/reservations
+POST /api/reservations/:id/confirm
+DELETE /api/reservations/:id
+
+BOOKINGS:
+POST /api/bookings
+GET  /api/bookings/my
+GET  /api/bookings/:id
+POST /api/bookings/:id/cancel
+
+ADMIN:
+Create protected endpoints for dashboard statistics, user management,
+and booking management.
+
+You may adjust the endpoint design if necessary to maintain a consistent,
+secure API architecture.
+
+Implement:
+- Request validation.
+- Authentication middleware.
+- Authorization middleware.
+- Consistent JSON responses.
+- Centralized error handling.
+- Correct HTTP status codes.
+- Pagination for large collections.
+- Filtering and sorting where appropriate.
+
+Do not expose internal stack traces or sensitive environment information
+in production responses.
+
+====================================================
+15. FRONTEND ARCHITECTURE
+====================================================
+
+Use a clear, maintainable React project structure.
+
+Organize the frontend into:
+
+- components
+- pages
+- layouts
+- context
+- hooks
+- services
+- routes
+- utilities
+- assets
+- styles
+
+Create reusable components for:
+
+- Navbar
+- Footer
+- MovieCard
+- MovieGrid
+- SearchBar
+- Filters
+- ShowtimeSelector
+- SeatMap
+- SeatLegend
+- BookingSummary
+- BookingCard
+- ProtectedRoute
+- AdminRoute
+- LoadingSpinner
+- ErrorMessage
+- ConfirmationDialog
+
+Use React Router for navigation.
+
+Use Axios or a similar HTTP client to communicate with the backend.
+
+Implement:
+- Loading states.
+- Error states.
+- Form validation.
+- Empty states.
+- Responsive layouts.
+- Authentication-aware navigation.
+- Protected customer routes.
+- Protected administrator routes.
+
+Do not place all application code inside one large component.
+
+====================================================
+16. PROJECT DIRECTORY STRUCTURE
+====================================================
+
+Create a project structure similar to:
+
+imovies/
+  client/
+    public/
+    src/
+      assets/
+      components/
+      context/
+      hooks/
+      layouts/
+      pages/
+      routes/
+      services/
+      styles/
+      utils/
+      App.jsx
+      main.jsx
+    package.json
+    .env.example
+
+  server/
+    config/
+    controllers/
+    middleware/
+    models/
+    routes/
+    services/
+    utils/
+    tests/
+    app.js
+    server.js
+    package.json
+    .env.example
+
+  docs/
+    architecture.md
+    api-documentation.md
+    database-schema.md
+
+  .gitignore
+  README.md
+
+You may add folders when necessary, but keep the project modular and readable.
+
+====================================================
+17. ENVIRONMENT CONFIGURATION
+====================================================
+
+Create a server/.env.example file containing placeholder values for:
+
+PORT
+MONGODB_URI
+JWT_SECRET
+CLIENT_URL
+NODE_ENV
+
+Include any additional environment variables needed for optional integrations.
+
+Never commit real credentials.
+
+Explain how to configure MongoDB locally or use a hosted MongoDB deployment.
+
+Use environment variables for all secrets and environment-specific settings.
+
+====================================================
+18. SAMPLE DATA
+====================================================
+
+Provide a development seed script.
+
+The seed script should create:
+
+- Several sample movies.
+- A few theatres.
+- Screens with seating layouts.
+- Showtimes.
+- Appropriate sample prices.
+- An initial administrator account through a safe setup process.
+
+Use fictional or clearly identified sample movie records if genuine movie
+metadata and image rights are unavailable.
+
+Do not invent live cinema schedules or claim external booking availability.
+
+Make it easy to reset and reseed the development database.
+
+Never reset or delete production data automatically.
+
+====================================================
+19. TESTING
+====================================================
+
+Test the frontend, backend, authentication, and booking logic.
+
+Include tests for:
+
+- User registration.
+- Login and logout.
+- Invalid credentials.
+- Duplicate email prevention.
+- Unauthorized API access.
+- Customer access restrictions.
+- Admin-only operations.
+- Movie listing and search.
+- Showtime retrieval.
+- Seat availability.
+- Booking confirmation.
+- Duplicate seat booking prevention.
+- Booking cancellation.
+- Expired reservations.
+- Invalid showtimes.
+- Error handling.
+
+Use an appropriate testing framework such as Jest or Vitest and Supertest.
+
+Include instructions for running tests.
+
+Test important booking logic against a real test database or a suitable
+isolated database environment.
+
+Do not claim that tests passed unless you actually ran them.
+
+====================================================
+20. ACCESSIBILITY AND PERFORMANCE
+====================================================
+
+Implement:
+
+- Semantic HTML.
+- Keyboard-accessible navigation.
+- Visible focus indicators.
+- Accessible form labels.
+- Appropriate image alt text.
+- Responsive layouts.
+- Optimized image loading.
+- Database indexes for frequent queries.
+- Server-side pagination.
+- Efficient API calls.
+- Appropriate caching where beneficial.
+
+Ensure the interface remains usable on smaller mobile screens.
+
+====================================================
+21. README AND DOCUMENTATION
+====================================================
+
+Create a professional README.md containing:
+
+- Project overview.
+- Features.
+- Technology stack.
+- Architecture.
+- Prerequisites.
+- Installation steps.
+- Environment configuration.
+- MongoDB setup.
+- Development seed instructions.
+- How to run the frontend.
+- How to run the backend.
+- How to run tests.
+- API endpoint summary.
+- Administrator setup.
+- Known limitations.
+- Deployment instructions.
+
+Include the actual commands needed to run the project on Windows using VS Code.
+
+Ensure the documentation matches the code that you implement.
+
+====================================================
+22. IMPLEMENTATION WORKFLOW
+====================================================
+
+Follow these phases.
+
+PHASE 1:
+Inspect the workspace and determine whether a project already exists.
+Preserve useful existing files instead of overwriting them blindly.
+
+PHASE 2:
+Create the project structure and initialize the frontend and backend.
+
+PHASE 3:
+Configure Express, MongoDB, Mongoose, environment variables, and error handling.
+
+PHASE 4:
+Implement database models and seed data.
+
+PHASE 5:
+Implement authentication, authorization, and user management.
+
+PHASE 6:
+Implement movies, theatres, screens, and showtimes.
+
+PHASE 7:
+Implement seat availability, temporary reservations, booking confirmation,
+and cancellation.
+
+PHASE 8:
+Implement the customer-facing React interface.
+
+PHASE 9:
+Implement the administrator dashboard.
+
+PHASE 10:
+Connect all frontend pages to the backend APIs.
+
+PHASE 11:
+Test critical functionality, especially authentication and concurrent bookings.
+
+PHASE 12:
+Fix errors, remove dead code, and verify the application can start.
+
+PHASE 13:
+Write documentation and provide clear setup instructions.
+
+Do not stop after generating the project structure.
+
+Continue implementing actual features until the core application works.
+
+If you encounter an error, investigate it and fix the underlying issue
+rather than merely describing the error.
+
+====================================================
+23. DEFINITION OF DONE
+====================================================
+
+The project is complete only when:
+
+1. The React frontend starts successfully.
+2. The Express backend starts successfully.
+3. MongoDB connects successfully using the configured URI.
+4. Users can register and log in.
+5. Passwords are securely hashed.
+6. Movie listings are loaded from MongoDB through the API.
+7. Administrators can manage movies and showtimes.
+8. Customers can choose a showtime and view its seats.
+9. Customers can select available seats.
+10. The backend prevents conflicting bookings for the same seats.
+11. Confirmed bookings persist in MongoDB.
+12. Users can view their booking history.
+13. Eligible cancellations release the appropriate seats.
+14. Protected routes enforce authorization.
+15. The application has a professional responsive interface.
+16. Tests and setup documentation are provided.
+17. No secrets are hardcoded.
+18. No critical feature is represented as working when it is only a mockup.
+
+====================================================
+24. FINAL INSTRUCTIONS
+====================================================
+
+Start by inspecting the workspace.
+
+Then implement the application in manageable phases.
+
+Create actual source files, install necessary dependencies, connect the
+database, and test the application.
+
+Use sensible defaults instead of asking me to make unnecessary decisions.
+
+If a feature requires external credentials, implement the rest of the
+application and document the exact setup needed for that feature.
+
+Do not fabricate API keys, movie data sources, payment confirmations,
+or test results.
+
+When finished, report:
+
+- Features implemented.
+- Important files created.
+- Database setup instructions.
+- Commands to run the frontend and backend.
+- How to create the first administrator.
+- How to test the booking flow.
+- Tests actually executed and their results.
+- Any remaining limitations.
+
+The final deliverable must be a working full-stack IMovies application,
+not just a design, prototype, or written plan.
