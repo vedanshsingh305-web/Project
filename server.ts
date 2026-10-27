@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { connectDB } from './server/db/connection.js';
@@ -19,20 +20,20 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+  const isProduction = process.env.NODE_ENV === 'production';
 
-  // Middlewares
   app.use(cors());
   app.use(express.json());
 
-  // Connect to MongoDB & seed initial data if needed
+  // Production must have a persistent database; fail startup if initialization fails.
   try {
     await connectDB();
     await seedDatabase(false);
   } catch (err) {
     console.error('Failed to initialize MongoDB:', err);
+    if (isProduction) throw err;
   }
 
-  // API Routes
   app.use('/api/auth', authRouter);
   app.use('/api/movies', moviesRouter);
   app.use('/api/theatres', theatresRouter);
@@ -41,27 +42,23 @@ async function startServer() {
   app.use('/api/bookings', bookingsRouter);
   app.use('/api/admin', adminRouter);
 
-  // Health check endpoint
   app.get('/api/health', (_req, res) => {
-    res.json({
-      status: 'ok',
+    const databaseConnected = mongoose.connection.readyState === 1;
+    res.status(databaseConnected ? 200 : 503).json({
+      status: databaseConnected ? 'ok' : 'unavailable',
       service: 'IMovies API',
       timestamp: new Date().toISOString(),
-      database: 'connected',
+      database: databaseConnected ? 'connected' : 'disconnected',
     });
   });
 
-  const isProduction = process.env.NODE_ENV === 'production';
-
   if (!isProduction) {
-    // Mount Vite middleware in development
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
   } else {
-    // Serve static files in production
     app.use(express.static(path.resolve(__dirname, 'dist')));
     app.get('*', (_req, res) => {
       res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
@@ -69,7 +66,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🎬 IMovies Full-Stack Server running on http://0.0.0.0:${PORT}`);
+    console.log(`IMovies server listening on port ${PORT}`);
   });
 }
 
