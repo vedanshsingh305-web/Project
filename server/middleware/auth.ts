@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'imovies_super_secret_jwt_key_2026';
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET must be configured in production.');
+}
+const JWT_SECRET = process.env.JWT_SECRET || 'local-development-only-imovies-secret';
 
 export interface TokenPayload {
   userId: string;
@@ -30,7 +33,7 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
     const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
     req.user = decoded;
     next();
-  } catch (err) {
+  } catch {
     res.status(401).json({ success: false, message: 'Invalid or expired token.' });
   }
 }
@@ -43,7 +46,7 @@ export function optionalAuth(req: AuthRequest, _res: Response, next: NextFunctio
       const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
       req.user = decoded;
     } catch {
-      // ignore invalid token for optional auth
+      // Ignore invalid tokens for optional authentication.
     }
   }
   next();
