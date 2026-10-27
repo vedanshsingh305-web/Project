@@ -31,12 +31,17 @@ export async function seedDatabase(force: boolean = false) {
 
   // 1. Users
   const salt = await bcrypt.genSalt(10);
-  const adminPassword = await bcrypt.hash('AdminPass123!', salt);
+  const adminEmail = process.env.NODE_ENV === 'production' ? process.env.ADMIN_EMAIL?.trim().toLowerCase() : 'admin@imovies.com';
+  const configuredAdminPassword = process.env.NODE_ENV === 'production' ? process.env.ADMIN_PASSWORD : 'AdminPass123!';
+  if (!adminEmail || !configuredAdminPassword || configuredAdminPassword.length < 12) {
+    throw new Error('Set ADMIN_EMAIL and ADMIN_PASSWORD (at least 12 characters) before seeding a production database.');
+  }
+  const adminPassword = await bcrypt.hash(configuredAdminPassword, salt);
   const customerPassword = await bcrypt.hash('UserPass123!', salt);
 
   const admin = await User.create({
     name: 'Eleanor Vance (Admin)',
-    email: 'admin@imovies.com',
+    email: adminEmail,
     password: adminPassword,
     role: 'admin',
     phone: '+1 (555) 019-2834',
