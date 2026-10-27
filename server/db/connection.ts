@@ -4,31 +4,33 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 let mongoMemoryServer: MongoMemoryServer | null = null;
 
 export async function connectDB(): Promise<typeof mongoose> {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI?.trim();
 
-  if (uri && uri.trim() !== '') {
+  if (uri) {
+    console.log('Connecting to configured MongoDB...');
     try {
-      console.log('Connecting to external MongoDB...');
       await mongoose.connect(uri);
-      console.log('Connected to external MongoDB successfully.');
+      console.log('Connected to MongoDB successfully.');
       return mongoose;
     } catch (err) {
-      console.warn('Failed to connect to MONGODB_URI, falling back to embedded MongoMemoryServer:', (err as Error).message);
+      console.error('Failed to connect to configured MongoDB:', (err as Error).message);
+      if (process.env.NODE_ENV === 'production') {
+        throw err;
+      }
     }
   }
 
-  // Fallback to high-performance local embedded MongoDB
-  console.log('Starting embedded MongoDB engine (MongoMemoryServer)...');
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('MONGODB_URI must be configured in production. Refusing to use a temporary in-memory database.');
+  }
+
+  console.log('Starting embedded MongoDB for local development...');
   mongoMemoryServer = await MongoMemoryServer.create({
-    instance: {
-      dbName: 'imovies_db',
-    },
+    instance: { dbName: 'imovies_db' },
   });
 
-  const memoryUri = mongoMemoryServer.getUri();
-  console.log('Connecting to embedded MongoDB at', memoryUri);
-  await mongoose.connect(memoryUri);
-  console.log('MongoDB connected successfully.');
+  await mongoose.connect(mongoMemoryServer.getUri());
+  console.log('Embedded MongoDB connected successfully.');
   return mongoose;
 }
 
